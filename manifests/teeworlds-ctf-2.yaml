@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: teeworlds-ctf-2
+  labels:
+    app: teeworlds-ctf-2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: teeworlds-ctf-2
+    spec:
+      containers:
+      - name: teeworlds-ctf-2
+        image: riftbit/teeworlds:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8303
+        env:
+          - name: TW_sv_name
+            value: "NPF - Teeworlds CTF 1"
+          - name: TW_sv_register
+            value: "0"
+          - name: TW_sv_gametype
+            value: "ctf"
+          - name: TW_sv_motd
+            value: "Welcome to the NPF Teeworlds server. Have fun!"
+          - name: TW_sv_maprotation
+            value: "ctf1 ctf2 ctf3 ctf4 ctf5 ctf6 ctf7"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "0.5"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: teeworlds-ctf-2
+  labels:
+    app: teeworlds-ctf-2
+spec:
+  selector:
+    app: teeworlds-ctf-2
+  ports:
+    - name: game
+      protocol: UDP
+      port: 8303
+      targetPort: 8303
